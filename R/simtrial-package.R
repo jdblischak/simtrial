@@ -24,3 +24,6 @@ NULL
 
 #' @importFrom Rcpp sourceCpp
 NULL
+
+# https://rdatatable.gitlab.io/data.table/articles/datatable-importing.html#data-table-in-imports-but-nothing-imported
+.datatable.aware <- TRUE

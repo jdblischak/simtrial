@@ -36,6 +36,7 @@ VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
 Imports:
     Rcpp,
+    data.table,
     doFuture,
     dplyr,
     foreach,

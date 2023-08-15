@@ -1,0 +1,52 @@
+# Generates values from a previous version of simtrial for testing backwards
+# compatibility
+
+# Setup ------------------------------------------------------------------------
+
+# the Git commit ID or tag name to pass to the arg `ref` of install_github()
+reference <- "341f77f0a598dc6d638bd5c48746952a7db88255"
+
+tmplib <- tempfile()
+dir.create(tmplib)
+old_lib_paths <- .libPaths()
+.libPaths(c(tmplib, old_lib_paths))
+
+remotes::install_github(
+  repo = "Merck/simtrial",
+  ref = reference,
+  dependencies = FALSE,
+  upgrade = FALSE
+)
+library("simtrial")
+packageVersion("simtrial")
+
+# sim_fixed_n() ----------------------------------------------------------------
+
+set.seed(12345)
+ex1 <- sim_fixed_n(n_sim = 2)
+saveRDS(ex1, "tests/testthat/fixtures/sim_fixed_n_ex1.rds")
+set.seed(12345)
+ex2 <- sim_fixed_n(n_sim = 2, rho_gamma = data.frame(rho = 0, gamma = c(0, 1)))
+saveRDS(ex2, "tests/testthat/fixtures/sim_fixed_n_ex2.rds")
+set.seed(12345)
+ex3 <- sim_fixed_n(
+  n_sim = 2,
+  timing_type = c(2, 5),
+  rho_gamma = data.frame(rho = 0, gamma = c(0, 1))
+)
+saveRDS(ex3, "tests/testthat/fixtures/sim_fixed_n_ex3.rds")
+
+# cut_data_by_date() -----------------------------------------------------------
+
+set.seed(12345)
+ex1 <- cut_data_by_date(
+  x = sim_pw_surv(n = 20),
+  cut_date = 5
+)
+saveRDS(ex1, "tests/testthat/fixtures/cut_data_by_date_ex1.rds")
+
+# Cleanup ----------------------------------------------------------------------
+
+detach("package:simtrial")
+.libPaths(old_lib_paths)
+unlink(tmplib, recursive = TRUE)

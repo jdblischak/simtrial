@@ -128,7 +128,7 @@ mean(p < .025)
 # Example 3
 # Use two cores
 set.seed(2023)
-plan("multisession", workers=2)
+plan("multisession", workers = 2)
 sim_fixed_n(n_sim = 10)
 plan("sequential")
 }

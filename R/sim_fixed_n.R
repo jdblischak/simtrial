@@ -242,22 +242,22 @@ sim_fixed_n <- function(
   # Build a function to calculate z and log-hr
   doAnalysis <- function(d, rho_gamma, n_stratum) {
     if (nrow(rho_gamma) == 1) {
-      z <- tibble(z = (d %>% counting_process(arm = "experimental") %>% wlr(rho_gamma = rho_gamma))$z)
+      z <- data.frame(z = (d %>% counting_process(arm = "experimental") %>% wlr(rho_gamma = rho_gamma))$z)
     } else {
       z <- d %>%
         counting_process(arm = "experimental") %>%
         wlr(rho_gamma = rho_gamma, return_corr = TRUE)
     }
 
-    ans <- tibble(
-      event = sum(d$event),
-      ln_hr = ifelse(n_stratum > 1,
-        survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental") + survival::strata(stratum), data = d)$coefficients,
-        survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental"), data = d)$coefficients
-      ) %>% as.numeric()
-    )
+    event <- sum(d$event)
+    if (n_stratum > 1) {
+      ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental") + survival::strata(stratum), data = d)$coefficients
+    } else {
+      ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental"), data = d)$coefficients
+    }
+    ln_hr <- as.numeric(ln_hr)
 
-    ans <- cbind(ans, z)
+    ans <- cbind(event, ln_hr, z)
     return(ans)
   }
 
@@ -434,7 +434,8 @@ sim_fixed_n <- function(
       }
     }
 
-    addit %>% mutate(sim = i)
+    addit$sim <- i
+    return(addit)
   }
 
   return(results)
