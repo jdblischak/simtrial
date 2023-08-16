@@ -95,40 +95,40 @@ counting_process <- function(x, arm) {
     stop("counting_process: event indicator must be 0 (censoring) or 1 (event).")
   }
 
-  ans <- x %>%
-    group_by(stratum) %>%
-    arrange(desc(tte)) %>%
-    mutate(
-      one = 1,
-      n_risk_tol = cumsum(one),
-      n_risk_trt = cumsum(treatment == arm)
-    ) %>%
-    # Handling ties using Breslow's method
-    group_by(stratum, mtte = desc(tte)) %>%
-    summarize(
-      events = sum(event),
-      n_event_tol = sum((treatment == arm) * event),
-      tte = first(tte),
-      n_risk_tol = max(n_risk_tol),
-      n_risk_trt = max(n_risk_trt)
-    ) %>%
-    # Keep calculation for observed time with at least one event,
-    # at least one subject is at risk in both treatment group and control group.
-    filter(events > 0, n_risk_tol - n_risk_trt > 0, n_risk_trt > 0) %>%
-    select(-mtte) %>%
-    mutate(s = 1 - events / n_risk_tol) %>%
-    arrange(stratum, tte) %>%
-    group_by(stratum) %>%
-    mutate(
-      # Left continuous Kaplan-Meier Estimator
-      s = dplyr::lag(cumprod(s), default = 1),
-      # Observed events minus Expected events in treatment group
-      o_minus_e = n_event_tol - n_risk_trt / n_risk_tol * events,
-      # Variance of o_minus_e
-      var_o_minus_e = (n_risk_tol - n_risk_trt) *
-        n_risk_trt * events * (n_risk_tol - events) /
-        n_risk_tol^2 / (n_risk_tol - 1)
-    )
+  ans <- data.table::as.data.table(x)
+  ans <- ans[order(tte, decreasing = TRUE), ]
+  ans[, one := 1]
+  ans[, `:=`(
+    n_risk_tol = cumsum(one),
+    n_risk_trt = cumsum(treatment == arm)
+  ), by = "stratum"]
+
+  # Handling ties using Breslow's method
+  ans <- group_by(ans, stratum, mtte = desc(tte))
+  ans <- summarize(ans,
+    events = sum(event),
+    n_event_tol = sum((treatment == arm) * event),
+    tte = first(tte),
+    n_risk_tol = max(n_risk_tol),
+    n_risk_trt = max(n_risk_trt)
+  )
+  # Keep calculation for observed time with at least one event,
+  # at least one subject is at risk in both treatment group and control group.
+  ans <- filter(ans, events > 0, n_risk_tol - n_risk_trt > 0, n_risk_trt > 0)
+  ans <- select(ans, -mtte)
+  ans <- mutate(ans, s = 1 - events / n_risk_tol)
+  ans <- arrange(ans, stratum, tte)
+  ans <- group_by(ans, stratum)
+  ans <- mutate(ans,
+    # Left continuous Kaplan-Meier Estimator
+    s = dplyr::lag(cumprod(s), default = 1),
+    # Observed events minus Expected events in treatment group
+    o_minus_e = n_event_tol - n_risk_trt / n_risk_tol * events,
+    # Variance of o_minus_e
+    var_o_minus_e = (n_risk_tol - n_risk_trt) *
+      n_risk_trt * events * (n_risk_tol - events) /
+      n_risk_tol^2 / (n_risk_tol - 1)
+  )
 
   ans
 }
