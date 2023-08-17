@@ -30,4 +30,17 @@ test_that("counting_process()", {
   observed <- counting_process(y, arm = "experimental")
   expected <- readRDS("fixtures/counting_process_ex2.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+
+  # Example 3
+  # Counting Process Format with ties
+  x <- data.frame(
+    stratum = c(rep(1, 10), rep(2, 6)),
+    treatment = rep(c(1, 1, 0, 0), 4),
+    tte = c(rep(1:4, each = 4)),
+    event = rep(c(0, 1), 8)
+  )
+  arm <- 1
+  observed <- counting_process(x, arm)
+  expected <- readRDS("fixtures/counting_process_ex3.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })

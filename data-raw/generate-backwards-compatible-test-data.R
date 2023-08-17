@@ -64,6 +64,18 @@ y <- cut_data_by_event(x, 150)
 ex2 <- counting_process(y, arm = "experimental")
 saveRDS(ex2, "tests/testthat/fixtures/counting_process_ex2.rds")
 
+# Example 3
+# Counting Process Format with ties
+x <- data.frame(
+  stratum = c(rep(1, 10), rep(2, 6)),
+  treatment = rep(c(1, 1, 0, 0), 4),
+  tte = c(rep(1:4, each = 4)),
+  event = rep(c(0, 1), 8)
+)
+arm <- 1
+ex3 <- counting_process(x, arm)
+saveRDS(ex3, "tests/testthat/fixtures/counting_process_ex3.rds")
+
 # Cleanup ----------------------------------------------------------------------
 
 detach("package:simtrial")

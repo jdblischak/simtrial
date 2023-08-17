@@ -104,18 +104,13 @@ counting_process <- function(x, arm) {
 
   # Handling ties using Breslow's method
   ans[, mtte := -tte]
-  ans[, `:=`(
+  ans <- ans[, .(
     events = sum(event),
     n_event_tol = sum((treatment == arm) * event),
     tte = tte[1],
     n_risk_tol = max(n_risk_tol),
     n_risk_trt = max(n_risk_trt)
   ), by = c("stratum", "mtte")]
-  ans[, `:=`(treatment = NULL, event = NULL, one = NULL)]
-  data.table::setcolorder(
-    ans,
-    c("stratum", "events", "n_event_tol", "tte", "n_risk_tol", "n_risk_trt")
-  )
 
   # Keep calculation for observed time with at least one event,
   # at least one subject is at risk in both treatment group and control group.
