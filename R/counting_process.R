@@ -57,8 +57,7 @@
 #'   hypothesis)
 #' - `var_o_minus_e`: Variance of `o_minus_e` under the same assumption.
 #'
-#' @importFrom dplyr group_by arrange desc mutate
-#'   summarize first filter select lag
+#' @importFrom data.table ":="
 #'
 #' @export
 #'
@@ -104,31 +103,34 @@ counting_process <- function(x, arm) {
   ), by = "stratum"]
 
   # Handling ties using Breslow's method
-  ans <- group_by(ans, stratum, mtte = desc(tte))
-  ans <- summarize(ans,
+  ans[, mtte := -tte]
+  ans[, `:=`(
     events = sum(event),
     n_event_tol = sum((treatment == arm) * event),
-    tte = first(tte),
+    tte = tte[1],
     n_risk_tol = max(n_risk_tol),
     n_risk_trt = max(n_risk_trt)
+  ), by = c("stratum", "mtte")]
+  ans[, `:=`(treatment = NULL, event = NULL, one = NULL)]
+  data.table::setcolorder(
+    ans,
+    c("stratum", "events", "n_event_tol", "tte", "n_risk_tol", "n_risk_trt")
   )
+
   # Keep calculation for observed time with at least one event,
   # at least one subject is at risk in both treatment group and control group.
-  ans <- filter(ans, events > 0, n_risk_tol - n_risk_trt > 0, n_risk_trt > 0)
-  ans <- select(ans, -mtte)
-  ans <- mutate(ans, s = 1 - events / n_risk_tol)
-  ans <- arrange(ans, stratum, tte)
-  ans <- group_by(ans, stratum)
-  ans <- mutate(ans,
-    # Left continuous Kaplan-Meier Estimator
-    s = dplyr::lag(cumprod(s), default = 1),
-    # Observed events minus Expected events in treatment group
-    o_minus_e = n_event_tol - n_risk_trt / n_risk_tol * events,
-    # Variance of o_minus_e
-    var_o_minus_e = (n_risk_tol - n_risk_trt) *
-      n_risk_trt * events * (n_risk_tol - events) /
-      n_risk_tol^2 / (n_risk_tol - 1)
-  )
+  ans <- ans[events > 0 & n_risk_tol - n_risk_trt > 0 & n_risk_trt > 0, ]
+  ans[, mtte := NULL]
+  ans[, s := 1 - events / n_risk_tol]
+  ans <- ans[order(stratum, tte), ]
+  # Left continuous Kaplan-Meier Estimator
+  ans[, s := c(1, cumprod(s)[-length(s)]), by = "stratum"]
+  # Observed events minus Expected events in treatment group
+  ans[, o_minus_e := n_event_tol - n_risk_trt / n_risk_tol * events]
+  # Variance of o_minus_e
+  ans[, var_o_minus_e := (n_risk_tol - n_risk_trt) *
+    n_risk_trt * events * (n_risk_tol - events) /
+    n_risk_tol^2 / (n_risk_tol - 1)]
 
   ans
 }
