@@ -151,17 +151,15 @@ sim_pw_surv <- function(
     prob = stratum$p
   ))
   x[, enroll_time := rpw_enroll(n, enroll_rate)]
-
-  # Leave this group_by() for now. Because of how it process the groups in a
-  # a specific order, the random results from randomize_by_fixed_block() are
-  # difficult to reproduce exactly
-  #
-  # x[, treatment := randomize_by_fixed_block(n = .N, block = block), by = "stratum"]
-  x <- x %>%
-    group_by(stratum) %>%
-    # Assign treatment
-    mutate(treatment = randomize_by_fixed_block(n = n(), block = block))
-  data.table::setDT(x)
+  # The awkward back and forth ordering is to maintain 1:1 parity with
+  # dplyr::group_by() for backwards compatibility. group_by() sorts by the
+  # grouping variable and then returns the rows to their original positions.
+  # This is mainly for testing for backwards compatibility. Since the
+  # treatments are assigned randomly by group, it would still be statistically
+  # valid without this ordering
+  data.table::setorderv(x, "stratum")
+  x[, treatment := randomize_by_fixed_block(n = .N, block = block), by = "stratum"]
+  data.table::setorderv(x, "enroll_time")
 
   # Generate time to failure and time to dropout
   unique_stratum <- unique(x$stratum)
