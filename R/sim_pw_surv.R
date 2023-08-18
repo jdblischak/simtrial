@@ -56,6 +56,7 @@
 #' - `fail`: Indicator that `cte` was set using failure time;
 #'   i.e., 1 is a failure, 0 is a dropout.
 #'
+#' @importFrom data.table .N
 #' @importFrom dplyr group_by mutate
 #' @importFrom tibble tibble
 #'
@@ -142,24 +143,31 @@ sim_pw_surv <- function(
       duration = rep(100, 2),
       rate = rep(.001, 2)
     )) {
-  # Start tibble by generating stratum and enrollment times
-  x <- tibble(stratum = sample(
+  # Start table by generating stratum and enrollment times
+  x <- data.table::data.table(stratum = sample(
     x = stratum$stratum,
     size = n,
     replace = TRUE,
     prob = stratum$p
-  )) %>%
-    mutate(enroll_time = rpw_enroll(n, enroll_rate)) %>%
+  ))
+  x[, enroll_time := rpw_enroll(n, enroll_rate)]
+
+  # Leave this group_by() for now. Because of how it process the groups in a
+  # a specific order, the random results from randomize_by_fixed_block() are
+  # difficult to reproduce exactly
+  #
+  # x[, treatment := randomize_by_fixed_block(n = .N, block = block), by = "stratum"]
+  x <- x %>%
     group_by(stratum) %>%
     # Assign treatment
-    mutate(treatment = randomize_by_fixed_block(n = n(), block = block)) %>%
-    # Generate time to failure and time to dropout
-    group_by(stratum, treatment)
+    mutate(treatment = randomize_by_fixed_block(n = n(), block = block))
+  data.table::setDT(x)
 
+  # Generate time to failure and time to dropout
   unique_stratum <- unique(x$stratum)
   unique_treatment <- unique(x$treatment)
-  x$fail_time <- 0
-  x$dropout_time <- 0
+  x[, fail_time := 0]
+  x[, dropout_time := 0]
 
   for (sr in unique_stratum) {
     for (tr in unique_treatment) {
@@ -176,11 +184,9 @@ sim_pw_surv <- function(
   }
 
   # Set calendar time-to-event and failure indicator
-  ans <- x %>%
-    mutate(
-      cte = pmin(dropout_time, fail_time) + enroll_time,
-      fail = (fail_time <= dropout_time) * 1
-    )
+  ans <- data.table::setDT(x)
+  ans[, cte := pmin(dropout_time, fail_time) + enroll_time]
+  ans[, fail := (fail_time <= dropout_time) * 1]
 
-  ans
+  data.table::setDF(ans)
 }

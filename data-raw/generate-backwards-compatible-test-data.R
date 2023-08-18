@@ -103,6 +103,76 @@ arm <- 1
 ex3 <- counting_process(x, arm)
 saveRDS(ex3, "tests/testthat/fixtures/counting_process_ex3.rds")
 
+# sim_pw_surv() ----------------------------------------------------------------
+
+# Example 1
+set.seed(12345)
+ex1 <- sim_pw_surv(n = 20)
+saveRDS(ex1, "tests/testthat/fixtures/sim_pw_surv_ex1.rds")
+
+# Example 2
+# 3:1 randomization
+set.seed(12345)
+ex2 <- sim_pw_surv(
+  n = 20,
+  block = c(rep("experimental", 3), "control")
+)
+saveRDS(ex2, "tests/testthat/fixtures/sim_pw_surv_ex2.rds")
+
+# Example 3
+# Simulate 2 stratum; will use defaults for blocking and enrollRates
+set.seed(12345)
+ex3 <- sim_pw_surv(
+  n = 20,
+  # 2 stratum,30% and 70% prevalence
+  stratum = data.frame(stratum = c("Low", "High"), p = c(.3, .7)),
+  fail_rate = data.frame(
+    stratum = c(rep("Low", 4), rep("High", 4)),
+    period = rep(1:2, 4),
+    treatment = rep(c(
+      rep("control", 2),
+      rep("experimental", 2)
+    ), 2),
+    duration = rep(c(3, 1), 4),
+    rate = c(.03, .05, .03, .03, .05, .08, .07, .04)
+  ),
+  dropout_rate = data.frame(
+    stratum = c(rep("Low", 2), rep("High", 2)),
+    period = rep(1, 4),
+    treatment = rep(c("control", "experimental"), 2),
+    duration = rep(1, 4),
+    rate = rep(.001, 4)
+  )
+)
+saveRDS(ex3, "tests/testthat/fixtures/sim_pw_surv_ex3.rds")
+
+# Example 4
+# If you want a more rectangular entry for a tibble
+fail_rate <- list(
+  data.frame(stratum = "Low", period = 1, treatment = "control", duration = 3, rate = .03),
+  data.frame(stratum = "Low", period = 1, treatment = "experimental", duration = 3, rate = .03),
+  data.frame(stratum = "Low", period = 2, treatment = "experimental", duration = 3, rate = .02),
+  data.frame(stratum = "High", period = 1, treatment = "control", duration = 3, rate = .05),
+  data.frame(stratum = "High", period = 1, treatment = "experimental", duration = 3, rate = .06),
+  data.frame(stratum = "High", period = 2, treatment = "experimental", duration = 3, rate = .03)
+)
+fail_rate <- do.call(rbind, fail_rate)
+dropout_rate <- list(
+  data.frame(stratum = "Low", period = 1, treatment = "control", duration = 3, rate = .001),
+  data.frame(stratum = "Low", period = 1, treatment = "experimental", duration = 3, rate = .001),
+  data.frame(stratum = "High", period = 1, treatment = "control", duration = 3, rate = .001),
+  data.frame(stratum = "High", period = 1, treatment = "experimental", duration = 3, rate = .001)
+)
+dropout_rate <- do.call(rbind, dropout_rate)
+set.seed(12345)
+ex4 <- sim_pw_surv(
+  n = 12,
+  stratum = data.frame(stratum = c("Low", "High"), p = c(.3, .7)),
+  fail_rate = fail_rate,
+  dropout_rate = dropout_rate
+)
+saveRDS(ex4, "tests/testthat/fixtures/sim_pw_surv_ex4.rds")
+
 # Cleanup ----------------------------------------------------------------------
 
 detach("package:simtrial")
