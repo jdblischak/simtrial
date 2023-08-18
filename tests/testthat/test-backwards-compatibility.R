@@ -44,3 +44,31 @@ test_that("counting_process()", {
   expected <- readRDS("fixtures/counting_process_ex3.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
+
+test_that("sim_fixed_n()", {
+  # Example 1
+  # Show output structure
+  set.seed(12345)
+  observed <- sim_fixed_n(n = 2)
+  expected <- readRDS("fixtures/sim_fixed_n_ex1.rds")
+  expect_equal(observed, expected)
+
+  # Example 2
+  # Example with 2 tests: logrank and FH(0,1)
+  set.seed(12345)
+  observed <- sim_fixed_n(n = 2, rho_gamma = tibble(rho = 0, gamma = c(0, 1)))
+  expected <- readRDS("fixtures/sim_fixed_n_ex2.rds")
+  expect_equal(observed, expected)
+
+  # Example 3
+  # Power by test
+  # Only use cuts for events, events + min follow-up
+  set.seed(12345)
+  observed <- sim_fixed_n(
+    n_sim = 2,
+    timing_type = c(2, 5),
+    rho_gamma = data.frame(rho = 0, gamma = c(0, 1))
+  )
+  expected <- readRDS("fixtures/sim_fixed_n_ex3.rds")
+  expect_equal(observed, expected)
+})
