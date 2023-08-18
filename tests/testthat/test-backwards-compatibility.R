@@ -11,6 +11,34 @@ test_that("cut_data_by_date()", {
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
+test_that("get_cut_date_by_event()", {
+  set.seed(12345)
+  x <- sim_pw_surv(
+    n = 200,
+    stratum = data.frame(
+      stratum = c("Positive", "Negative"),
+      p = c(.5, .5)
+    ),
+    fail_rate = data.frame(
+      stratum = rep(c("Positive", "Negative"), 2),
+      period = rep(1, 4),
+      treatment = c(rep("control", 2), rep("experimental", 2)),
+      duration = rep(1, 4),
+      rate = log(2) / c(6, 9, 9, 12)
+    ),
+    dropout_rate = data.frame(
+      stratum = rep(c("Positive", "Negative"), 2),
+      period = rep(1, 4),
+      treatment = c(rep("control", 2), rep("experimental", 2)),
+      duration = rep(1, 4),
+      rate = rep(.001, 4)
+    )
+  )
+  observed <- get_cut_date_by_event(subset(x, stratum == "Positive"), event = 50)
+  expected <- readRDS("fixtures/get_cut_date_by_event_ex1.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+})
+
 test_that("counting_process()", {
   # Example 1
   x <- data.frame(

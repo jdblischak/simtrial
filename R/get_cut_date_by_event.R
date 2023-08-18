@@ -25,8 +25,6 @@
 #'   at which the targeted event count is reached, or if the final event count
 #'   is never reached, the final `cte` at which an event occurs.
 #'
-#' @importFrom dplyr ungroup select filter arrange mutate row_number last
-#'
 #' @export
 #'
 #' @examples
@@ -62,14 +60,12 @@
 #' y <- cut_data_by_date(x, cut_date = d)
 #' table(y$stratum, y$event)
 get_cut_date_by_event <- function(x, event) {
-  y <- x %>%
-    ungroup() %>%
-    select(cte, fail) %>%
-    filter(fail == 1) %>%
-    select(cte) %>%
-    arrange(cte) %>%
-    mutate(eventCount = row_number()) %>%
-    subset(eventCount <= event)
+  y <- data.table::as.data.table(x)
+  y <- y[fail == 1, ]
+  y <- y[, list(cte)]
+  y <- y[order(cte), ]
+  y[, eventCount := data.table::frankv(y, "cte", ties.method = "first")]
+  y <- y[eventCount <= event, ]
 
-  last(y$cte)
+  data.table::last(y$cte)
 }
