@@ -239,28 +239,6 @@ sim_fixed_n <- function(
 
   n_stratum <- nrow(stratum)
 
-  # Build a function to calculate z and log-hr
-  doAnalysis <- function(d, rho_gamma, n_stratum) {
-    if (nrow(rho_gamma) == 1) {
-      z <- data.frame(z = (d %>% counting_process(arm = "experimental") %>% wlr(rho_gamma = rho_gamma))$z)
-    } else {
-      z <- d %>%
-        counting_process(arm = "experimental") %>%
-        wlr(rho_gamma = rho_gamma, return_corr = TRUE)
-    }
-
-    event <- sum(d$event)
-    if (n_stratum > 1) {
-      ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental") + survival::strata(stratum), data = d)$coefficients
-    } else {
-      ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental"), data = d)$coefficients
-    }
-    ln_hr <- as.numeric(ln_hr)
-
-    ans <- cbind(event, ln_hr, z)
-    return(ans)
-  }
-
   # Compute minimum planned follow-up time
   minFollow <- max(0, total_duration - sum(enroll_rate$duration))
 
@@ -439,4 +417,26 @@ sim_fixed_n <- function(
   }
 
   return(results)
+}
+
+# Build a function to calculate z and log-hr
+doAnalysis <- function(d, rho_gamma, n_stratum) {
+  if (nrow(rho_gamma) == 1) {
+    z <- data.frame(z = (d %>% counting_process(arm = "experimental") %>% wlr(rho_gamma = rho_gamma))$z)
+  } else {
+    z <- d %>%
+      counting_process(arm = "experimental") %>%
+      wlr(rho_gamma = rho_gamma, return_corr = TRUE)
+  }
+
+  event <- sum(d$event)
+  if (n_stratum > 1) {
+    ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental") + survival::strata(stratum), data = d)$coefficients
+  } else {
+    ln_hr <- survival::coxph(survival::Surv(tte, event) ~ (treatment == "experimental"), data = d)$coefficients
+  }
+  ln_hr <- as.numeric(ln_hr)
+
+  ans <- cbind(event, ln_hr, z)
+  return(ans)
 }
