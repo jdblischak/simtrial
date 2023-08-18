@@ -42,7 +42,7 @@ surv_to_count <- function(time, status, trt, strats) {
 
   # Log Rank Expectation Difference and Variance
   res <- merge(km, km_by_trt, all = TRUE) %>%
-    arrange(trt, strats, time) %>%
+    dplyr::arrange(trt, strats, time) %>%
     mutate(
       OminusE = tn.event - tn.risk / n.risk * n.event,
       Var = (n.risk - tn.risk) * tn.risk * n.event * (n.risk - n.event) / n.risk^2 / (n.risk - 1)
