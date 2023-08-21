@@ -103,6 +103,31 @@ arm <- 1
 ex3 <- counting_process(x, arm)
 saveRDS(ex3, "tests/testthat/fixtures/counting_process_ex3.rds")
 
+# rpw_enroll() -----------------------------------------------------------------
+
+# Example 1
+# Piecewise uniform (piecewise exponential inter-arrival times) for 10k patients
+# enrollment Enrollment rates of 5 for time 0-100, 15 for 100-300, and 30
+# thereafter
+set.seed(12345)
+ex1 <- rpw_enroll(
+  n = 1e5,
+  enroll_rate = data.frame(
+    rate = c(5, 15, 30),
+    duration = c(100, 200, 100)
+  )
+)
+saveRDS(ex1, "tests/testthat/fixtures/rpw_enroll_ex1.rds")
+
+# Example 2
+# Exponential enrollment
+set.seed(12345)
+ex2 <- rpw_enroll(
+  n = 1e5,
+  enroll_rate = data.frame(rate = .03, duration = 1)
+)
+saveRDS(ex2, "tests/testthat/fixtures/rpw_enroll_ex2.rds")
+
 # sim_pw_surv() ----------------------------------------------------------------
 
 # Example 1

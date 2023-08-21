@@ -73,6 +73,29 @@ test_that("counting_process()", {
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
+test_that("rpw_enroll()", {
+  set.seed(12345)
+  observed <- rpw_enroll(
+    n = 1e5,
+    enroll_rate = data.frame(
+      rate = c(5, 15, 30),
+      duration = c(100, 200, 100)
+    )
+  )
+  expected <- readRDS("fixtures/rpw_enroll_ex1.rds")
+  expect_equal(observed, expected)
+
+  # Example 2
+  # Exponential enrollment
+  set.seed(12345)
+  observed <- rpw_enroll(
+    n = 1e5,
+    enroll_rate = data.frame(rate = .03, duration = 1)
+  )
+  expected <- readRDS("fixtures/rpw_enroll_ex2.rds")
+  expect_equal(observed, expected)
+})
+
 test_that("sim_pw_surv()", {
   # Example 1
   set.seed(12345)
