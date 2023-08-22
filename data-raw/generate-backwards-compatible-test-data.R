@@ -103,6 +103,32 @@ arm <- 1
 ex3 <- counting_process(x, arm)
 saveRDS(ex3, "tests/testthat/fixtures/counting_process_ex3.rds")
 
+# wlr() ------------------------------------------------------------------------
+
+# Example 1
+# Use default enrollment and event rates at cut at 100 events
+set.seed(12345)
+x <- sim_pw_surv(n = 200)
+x <- cut_data_by_event(x, 100)
+x <- counting_process(x, arm = "experimental")
+
+# Compute the corvariance between FH(0, 0), FH(0, 1) and FH(1, 0)
+ex1 <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)))
+saveRDS(ex1, "tests/testthat/fixtures/wlr_ex1.rds")
+ex1_var <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_variance = TRUE)
+saveRDS(ex1_var, "tests/testthat/fixtures/wlr_ex1_var.rds")
+ex1_cor <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_corr = TRUE)
+saveRDS(ex1_cor, "tests/testthat/fixtures/wlr_ex1_cor.rds")
+
+# Example 2
+# Use default enrollment and event rates at cut of 100 events
+set.seed(12345)
+x <- sim_pw_surv(n = 200)
+x <- cut_data_by_event(x, 100)
+x <- counting_process(x, arm = "experimental")
+ex2 <- wlr(x, rho_gamma = data.frame(rho = c(0, 0), gamma = c(0, 1)), return_corr = TRUE)
+saveRDS(ex2, "tests/testthat/fixtures/wlr_ex2.rds")
+
 # rpw_enroll() -----------------------------------------------------------------
 
 # Example 1

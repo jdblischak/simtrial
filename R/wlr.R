@@ -178,43 +178,6 @@ wlr <- function(
     stop("wlr: can't report the correlation for a single WLR test.")
   }
 
-  # Build an internal function to compute the Z statistics
-  # under a sequence of rho and gamma of WLR.
-  wlr_z_stat <- function(x, rho_gamma, return_variance) {
-    ans <- rho_gamma
-
-    xx <- x %>%
-      ungroup() %>%
-      select(s, o_minus_e, var_o_minus_e)
-
-    ans$z <- rep(0, nrow(rho_gamma))
-
-    if (return_variance) {
-      ans$var <- rep(0, nrow(rho_gamma))
-    }
-
-    for (i in 1:nrow(rho_gamma)) {
-      y <- xx %>%
-        mutate(
-          weight = s^rho_gamma$rho[i] * (1 - s)^rho_gamma$gamma[i],
-          weighted_o_minus_e = weight * o_minus_e,
-          weighted_var = weight^2 * var_o_minus_e
-        ) %>%
-        summarize(
-          weighted_var = sum(weighted_var),
-          weighted_o_minus_e = sum(weighted_o_minus_e)
-        )
-
-      ans$z[i] <- y$weighted_o_minus_e / sqrt(y$weighted_var)
-
-      if (return_variance) {
-        ans$var[i] <- y$weighted_var
-      }
-    }
-
-    ans
-  }
-
   if (n_weight == 1) {
     ans <- wlr_z_stat(x, rho_gamma = rho_gamma, return_variance = return_variance)
   } else {
@@ -257,6 +220,38 @@ wlr <- function(
     } else if (return_corr + return_corr == 0) {
       corr_mat <- NULL
       ans <- cbind(rho_gamma, z)
+    }
+  }
+
+  ans
+}
+
+# Build an internal function to compute the Z statistics
+# under a sequence of rho and gamma of WLR.
+wlr_z_stat <- function(x, rho_gamma, return_variance) {
+  ans <- rho_gamma
+
+  xx <- x[, c("s", "o_minus_e", "var_o_minus_e")]
+
+  ans$z <- rep(0, nrow(rho_gamma))
+
+  if (return_variance) {
+    ans$var <- rep(0, nrow(rho_gamma))
+  }
+
+  for (i in 1:nrow(rho_gamma)) {
+    weight <- xx$s^rho_gamma$rho[i] * (1 - xx$s)^rho_gamma$gamma[i]
+    weighted_o_minus_e <- weight * xx$o_minus_e
+    weighted_var <- weight^2 * xx$var_o_minus_e
+
+    weighted_var_total = sum(weighted_var)
+    weighted_o_minus_e_total = sum(weighted_o_minus_e)
+
+
+    ans$z[i] <- weighted_o_minus_e_total / sqrt(weighted_var_total)
+
+    if (return_variance) {
+      ans$var[i] <- weighted_var_total
     }
   }
 

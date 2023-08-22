@@ -73,6 +73,36 @@ test_that("counting_process()", {
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
+test_that("wlr()", {
+  # Example 1
+  # Use default enrollment and event rates at cut at 100 events
+  set.seed(12345)
+  x <- sim_pw_surv(n = 200)
+  x <- cut_data_by_event(x, 100)
+  x <- counting_process(x, arm = "experimental")
+
+  # Compute the corvariance between FH(0, 0), FH(0, 1) and FH(1, 0)
+  observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)))
+  expected <- readRDS("fixtures/wlr_ex1.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+  observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_variance = TRUE)
+  expected <- readRDS("fixtures/wlr_ex1_var.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+  observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_corr = TRUE)
+  expected <- readRDS("fixtures/wlr_ex1_cor.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+
+  # Example 2
+  # Use default enrollment and event rates at cut of 100 events
+  set.seed(12345)
+  x <- sim_pw_surv(n = 200)
+  x <- cut_data_by_event(x, 100)
+  x <- counting_process(x, arm = "experimental")
+  observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0), gamma = c(0, 1)), return_corr = TRUE)
+  expected <- readRDS("fixtures/wlr_ex2.rds")
+  expect_equivalent(as.data.frame(observed), as.data.frame(expected))
+})
+
 test_that("rpw_enroll()", {
   set.seed(12345)
   observed <- rpw_enroll(
