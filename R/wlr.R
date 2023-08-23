@@ -78,9 +78,6 @@
 #'   The stratified Fleming-Harrington weighted logrank test is then computed as:
 #'   \deqn{z = \sum_i X_i/\sqrt{\sum_i V_i}.}
 #'
-#' @importFrom tibble tibble as_tibble
-#' @importFrom dplyr left_join select
-#'
 #' @export
 #'
 #' @examples
@@ -191,16 +188,19 @@ wlr <- function(
       matrix(rho_gamma$gamma, nrow = n_weight, ncol = n_weight, byrow = TRUE)
     ) / 2
 
-    # Convert back to tibble
-    rg_new <- tibble(rho = as.numeric(ave_rho), gamma = as.numeric(ave_gamma))
+    # Convert to data.table
+    rg_new <- data.table::data.table(rho = as.numeric(ave_rho), gamma = as.numeric(ave_gamma))
     # Get unique values of rho, gamma
-    rg_unique <- rg_new %>% unique()
+    rg_unique <- unique(rg_new)
 
     # Compute FH statistic for unique values
     # and merge back to full set of pairs
-    rg_fh <- rg_new %>% left_join(
-      wlr_z_stat(x, rho_gamma = rg_unique, return_variance = TRUE),
-      by = c("rho" = "rho", "gamma" = "gamma")
+    rg_fh <- data.table::merge.data.table(
+      x = rg_new,
+      y = wlr_z_stat(x, rho_gamma = rg_unique, return_variance = TRUE),
+      by = c("rho", "gamma"),
+      all.x = TRUE,
+      sort = FALSE
     )
 
     # Get z statistics for input rho, gamma combinations
@@ -212,11 +212,11 @@ wlr <- function(
     if (return_corr) {
       corr_mat <- stats::cov2cor(cov_mat)
       colnames(corr_mat) <- paste("v", 1:ncol(corr_mat), sep = "")
-      ans <- cbind(rho_gamma, z, as_tibble(corr_mat))
+      ans <- cbind(rho_gamma, z, as.data.frame(corr_mat))
     } else if (return_variance) {
       corr_mat <- cov_mat
       colnames(corr_mat) <- paste("v", 1:ncol(corr_mat), sep = "")
-      ans <- cbind(rho_gamma, z, as_tibble(corr_mat))
+      ans <- cbind(rho_gamma, z, as.data.frame(corr_mat))
     } else if (return_corr + return_corr == 0) {
       corr_mat <- NULL
       ans <- cbind(rho_gamma, z)

@@ -61,7 +61,7 @@ testthat::test_that("Counting Process Format without ties", {
   res_counting_process <- simtrial::counting_process(x, arm)
   res_test <- surv_to_count(time = x$tte, status = x$event, trt = x$treatment, strats = x$stratum)
 
-  res_test <- as_tibble(subset(res_test, trt == 1)) %>%
+  res_test <- tibble::as_tibble(subset(res_test, trt == 1)) %>%
     subset(n.event > 0 & n.risk - tn.risk > 0 & tn.risk > 0)
 
   testthat::expect_equal(res_counting_process$o_minus_e, res_test$OminusE)
@@ -80,7 +80,7 @@ testthat::test_that("Counting Process Format with ties", {
   res_counting_process <- counting_process(x, arm)
   res_test <- surv_to_count(time = x$tte, status = x$event, trt = x$treatment, strats = x$stratum)
 
-  res_test <- as_tibble(subset(res_test, trt == 1)) %>%
+  res_test <- tibble::as_tibble(subset(res_test, trt == 1)) %>%
     subset(n.event > 0 & n.risk - tn.risk > 0 & tn.risk > 0)
 
   testthat::expect_equal(res_counting_process$o_minus_e, res_test$OminusE)
