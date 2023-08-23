@@ -126,6 +126,47 @@ test_that("rpw_enroll()", {
   expect_equal(observed, expected)
 })
 
+test_that("simfix2simpwsurv()", {
+  # Example 1
+  # Convert standard input
+  observed <- simfix2simpwsurv()
+  expected <- readRDS("fixtures/simfix2simpwsurv_ex1.rds")
+  expect_equivalent(
+    as.data.frame(observed$fail_rate),
+    as.data.frame(expected$fail_rate)
+  )
+  expect_equivalent(
+    as.data.frame(observed$dropout_rate),
+    as.data.frame(expected$dropout_rate)
+  )
+
+  # Example 2
+  # Stratified example
+  fail_rate <- data.frame(
+    stratum = c(rep("Low", 3), rep("High", 3)),
+    duration = rep(c(4, 10, 100), 2),
+    fail_rate = c(
+      .04, .1, .06,
+      .08, .16, .12
+    ),
+    hr = c(
+      1.5, .5, 2 / 3,
+      2, 10 / 16, 10 / 12
+    ),
+    dropout_rate = .01
+  )
+  observed <- simfix2simpwsurv(fail_rate)
+  expected <- readRDS("fixtures/simfix2simpwsurv_ex2.rds")
+  expect_equivalent(
+    as.data.frame(observed$fail_rate),
+    as.data.frame(expected$fail_rate)
+  )
+  expect_equivalent(
+    as.data.frame(observed$dropout_rate),
+    as.data.frame(expected$dropout_rate)
+  )
+})
+
 test_that("sim_pw_surv()", {
   # Example 1
   set.seed(12345)

@@ -154,6 +154,31 @@ ex2 <- rpw_enroll(
 )
 saveRDS(ex2, "tests/testthat/fixtures/rpw_enroll_ex2.rds")
 
+# simfix2simpwsurv() -----------------------------------------------------------
+
+# Example 1
+# Convert standard input
+ex1 <- simfix2simpwsurv()
+saveRDS(ex1, "tests/testthat/fixtures/simfix2simpwsurv_ex1.rds")
+
+# Example 2
+# Stratified example
+fail_rate <- data.frame(
+ stratum = c(rep("Low", 3), rep("High", 3)),
+ duration = rep(c(4, 10, 100), 2),
+ fail_rate = c(
+   .04, .1, .06,
+   .08, .16, .12
+ ),
+ hr = c(
+   1.5, .5, 2 / 3,
+   2, 10 / 16, 10 / 12
+ ),
+ dropout_rate = .01
+)
+ex2 <- simfix2simpwsurv(fail_rate)
+saveRDS(ex2, "tests/testthat/fixtures/simfix2simpwsurv_ex2.rds")
+
 # sim_pw_surv() ----------------------------------------------------------------
 
 # Example 1
