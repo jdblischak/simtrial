@@ -24,7 +24,7 @@
 #'
 #' @return A dataset ready for survival analysis.
 #'
-#' @importFrom dplyr filter mutate select
+#' @importFrom data.table ":=" as.data.table setDF
 #'
 #' @export
 #'
@@ -33,11 +33,11 @@
 #' # cut at calendar time 5 after start of randomization
 #' sim_pw_surv(n = 20) %>% cut_data_by_date(5)
 cut_data_by_date <- function(x, cut_date) {
-  ans <- data.table::as.data.table(x)
+  ans <- as.data.table(x)
   ans <- ans[enroll_time <= cut_date, ]
   ans[, tte := pmin(cte, cut_date) - enroll_time]
   ans[, event := fail * (cte <= cut_date)]
   ans <- ans[, c("tte", "event", "stratum", "treatment")]
 
-  return(data.table::setDF(ans))
+  return(setDF(ans))
 }

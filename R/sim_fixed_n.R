@@ -53,7 +53,7 @@
 #'   (2 and 3).
 #'
 #' @return
-#' A `tibble` including columns:
+#' A data frame including columns:
 #' - `event`: Event count.
 #' - `ln_hr`: Log-hazard ratio.
 #' - `z`: Normal test statistic; < 0 favors experimental.
@@ -67,6 +67,7 @@
 #' then columns `rho` and `gamma` are also included.
 #'
 #' @importFrom tibble tibble
+#' @importFrom data.table ":=" rbindlist setDF
 #' @importFrom doFuture "%dofuture%"
 #' @importFrom future plan
 #' @importFrom methods is
@@ -377,9 +378,9 @@ sim_fixed_n <- function(
       }
     }
 
-    results_sim <- data.table::rbindlist(addit)
+    results_sim <- rbindlist(addit)
     results_sim[, sim := i]
-    data.table::setDF(results_sim)
+    setDF(results_sim)
     return(results_sim)
   }
 

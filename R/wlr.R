@@ -31,7 +31,7 @@
 #'   estimated correlation for weighted sum of observed minus expected;
 #'   see details; Default: `FALSE`.
 #'
-#' @return A `tibble` with `rho_gamma` as input and the FH test statistic
+#' @return A data frame with `rho_gamma` as input and the FH test statistic
 #'   for the data in `x`. (`z`, a directional square root of the usual
 #'   weighted logrank test); if variance calculations are specified
 #'   (for example, to be used for covariances in a combination test),
@@ -77,6 +77,8 @@
 #'   \deqn{V_i = \sum_{j=1}^{d_{i}} (S_{ij}^\rho(1-S_{ij}^\gamma))^2V_{ij})}
 #'   The stratified Fleming-Harrington weighted logrank test is then computed as:
 #'   \deqn{z = \sum_i X_i/\sqrt{\sum_i V_i}.}
+#'
+#' @importFrom data.table data.table merge.data.table setDF
 #'
 #' @export
 #'
@@ -189,13 +191,13 @@ wlr <- function(
     ) / 2
 
     # Convert to data.table
-    rg_new <- data.table::data.table(rho = as.numeric(ave_rho), gamma = as.numeric(ave_gamma))
+    rg_new <- data.table(rho = as.numeric(ave_rho), gamma = as.numeric(ave_gamma))
     # Get unique values of rho, gamma
     rg_unique <- unique(rg_new)
 
     # Compute FH statistic for unique values
     # and merge back to full set of pairs
-    rg_fh <- data.table::merge.data.table(
+    rg_fh <- merge.data.table(
       x = rg_new,
       y = wlr_z_stat(x, rho_gamma = rg_unique, return_variance = TRUE),
       by = c("rho", "gamma"),
@@ -223,7 +225,7 @@ wlr <- function(
     }
   }
 
-  ans
+  return(setDF(ans))
 }
 
 # Build an internal function to compute the Z statistics
@@ -255,5 +257,5 @@ wlr_z_stat <- function(x, rho_gamma, return_variance) {
     }
   }
 
-  ans
+  return(ans)
 }

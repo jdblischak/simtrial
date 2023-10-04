@@ -38,7 +38,7 @@
 #'   treatment group value.
 #'
 #' @return
-#' A `tibble` grouped by `stratum` and sorted within stratum by `tte`.
+#' A data frame grouped by `stratum` and sorted within stratum by `tte`.
 #' Remain rows with at least one event in the population, at least one subject
 #' is at risk in both treatment group and control group.
 #' Other variables in this represent the following within each stratum at
@@ -57,7 +57,7 @@
 #'   hypothesis)
 #' - `var_o_minus_e`: Variance of `o_minus_e` under the same assumption.
 #'
-#' @importFrom data.table ":="
+#' @importFrom data.table ":=" as.data.table setDF
 #'
 #' @export
 #'
@@ -94,7 +94,7 @@ counting_process <- function(x, arm) {
     stop("counting_process: event indicator must be 0 (censoring) or 1 (event).")
   }
 
-  ans <- data.table::as.data.table(x)
+  ans <- as.data.table(x)
   ans <- ans[order(tte, decreasing = TRUE), ]
   ans[, one := 1]
   ans[, `:=`(
@@ -127,5 +127,5 @@ counting_process <- function(x, arm) {
     n_risk_trt * events * (n_risk_tol - events) /
     n_risk_tol^2 / (n_risk_tol - 1)]
 
-  ans
+  return(setDF(ans))
 }

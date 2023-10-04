@@ -33,10 +33,11 @@
 #'   hazard ratio for experimental vs. control,
 #'   and dropout rates by stratum and time period.
 #'
-#' @return A list of two `tibble` components formatted for
+#' @return A list of two data frame components formatted for
 #'   [sim_pw_surv()]: `fail_rate` and `dropout_rate`.
 #'
 #' @importFrom tibble tibble
+#' @importFrom data.table ":=" .N as.data.table setDF
 #'
 #' @export
 #'
@@ -91,14 +92,14 @@ simfix2simpwsurv <- function(
       dropout_rate = rep(.001, 2)
     )) {
   # Put failure rates into sim_pw_surv format
-  fr_control <- data.table::as.data.table(fail_rate)
+  fr_control <- as.data.table(fail_rate)
   fr_control[, `:=`(
     treatment = "control",
     rate = fail_rate,
     period = seq_len(.N)
   ), by = "stratum"]
 
-  fr_experimental <- data.table::as.data.table(fail_rate)
+  fr_experimental <- as.data.table(fail_rate)
   fr_experimental[, `:=`(
     treatment = "experimental",
     rate = fail_rate * hr,
@@ -109,7 +110,7 @@ simfix2simpwsurv <- function(
   fr <- fr[, c("stratum", "period", "treatment", "duration", "rate")]
 
   # Put dropout rates into sim_pw_surv format
-  dr_control <- data.table::as.data.table(fail_rate)
+  dr_control <- as.data.table(fail_rate)
   dr_control[, `:=`(
     treatment = "control",
     rate = dropout_rate,
@@ -122,5 +123,5 @@ simfix2simpwsurv <- function(
   dr <- rbind(dr_control, dr_experimental)
   dr <- dr[, c("stratum", "period", "treatment", "duration", "rate")]
 
-  list(fail_rate = fr, dropout_rate = dr)
+  list(fail_rate = setDF(fr), dropout_rate = setDF(dr))
 }

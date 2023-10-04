@@ -35,6 +35,8 @@
 #'
 #' @return A vector of random enrollment times.
 #'
+#' @importFrom data.table ":=" .N as.data.table last
+#'
 #' @export
 #'
 #' @examples
@@ -85,7 +87,7 @@ rpw_enroll <- function(
   }
 
   # Build `y` summarizes the start/end time, period order, etc.
-  y <- data.table::as.data.table(enroll_rate)
+  y <- as.data.table(enroll_rate)
   y[, period := seq_len(.N)]
   y[, finish := cumsum(duration)]
   y[, lambda := duration * rate]
@@ -99,12 +101,12 @@ rpw_enroll <- function(
       return(ans)
     }
 
-    if (data.table::last(enroll_rate$rate) <= 0) {
+    if (last(enroll_rate$rate) <= 0) {
       # Stop with error message if enrollment has not finished but enrollment rate for last period is less or equal with 0
       stop("rpw_enroll: please specify > 0 enrollment rate for the last period; otherwise enrollment cannot finish.")
     } else {
       # Otherwise, return inter-arrival exponential times
-      ans <- cumsum(stats::rexp(n = n, rate = data.table::last(enroll_rate$rate))) + data.table::last(y$finish)
+      ans <- cumsum(stats::rexp(n = n, rate = last(enroll_rate$rate))) + last(y$finish)
       return(ans)
     }
   }
@@ -129,14 +131,14 @@ rpw_enroll <- function(
   n_add <- n - nrow(z)
   # Stop with error message if enrollment has not finished but
   # enrollment rate for last period is less or equal with 0
-  if (data.table::last(enroll_rate$rate) <= 0) {
+  if (last(enroll_rate$rate) <= 0) {
     stop("rpw_enroll: please specify > 0 enrollment rate for the last period; otherwise enrollment cannot finish.")
   }
   # Otherwise, return inter-arrival exponential times
   else {
     ans <- c(
       z$enroll_time,
-      cumsum(stats::rexp(n_add, rate = data.table::last(enroll_rate$rate))) + data.table::last(y$finish)
+      cumsum(stats::rexp(n_add, rate = last(enroll_rate$rate))) + last(y$finish)
     )
     return(ans)
   }
