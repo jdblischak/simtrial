@@ -120,15 +120,15 @@ in <code><a href="https://rdrr.io/pkg/mvtnorm/man/pmvnorm.html" class="external-
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     cluster</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   event      ln_hr rho gamma         z        v1        v2        v3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   372 -0.3025975   0     0 -2.904157 1.0000000 0.8571877 0.9357488</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   372 -0.3025975   0     1 -3.137564 0.8571877 1.0000000 0.9315942</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   372 -0.3025975   1     1 -2.937802 0.9357488 0.9315942 1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   366 -0.3215434   0     0 -3.069359 1.0000000 0.8557413 0.9350653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   366 -0.3215434   0     1 -2.848808 0.8557413 1.0000000 0.9295625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   366 -0.3215434   1     1 -2.808515 0.9350653 0.9295625 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             cut duration sim</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Max(min follow-up, event cut) 77.82216   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Max(min follow-up, event cut) 77.82216   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Max(min follow-up, event cut) 77.82216   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Max(min follow-up, event cut) 70.13772   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Max(min follow-up, event cut) 70.13772   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Max(min follow-up, event cut) 70.13772   1</span>
 <span class="r-in"><span><span class="fu">pvalue_maxcombo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.001627737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002031113</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example 2</span></span></span>
 <span class="r-in"><span><span class="co"># Only use cuts for events, events + min follow-up</span></span></span>
@@ -143,19 +143,19 @@ in <code><a href="https://rdrr.io/pkg/mvtnorm/man/pmvnorm.html" class="external-
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Backend uses sequential processing.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">xx</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   event      ln_hr rho gamma         z        v1        v2        v3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   350 -0.4687070   0     0 -4.351233 1.0000000 0.8537912 0.9313520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   350 -0.4687070   0     1 -3.736836 0.8537912 1.0000000 0.9428819</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   350 -0.4687070   1     1 -4.083289 0.9313520 0.9428819 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   379 -0.4443905   0     0 -4.301733 1.0000000 0.8546344 0.9356354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   379 -0.4443905   0     1 -5.123370 0.8546344 1.0000000 0.9172203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   379 -0.4443905   1     1 -4.187738 0.9356354 0.9172203 1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   352 -0.5700409   0     0 -5.297160 1.0000000 0.8559517 0.9324549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   352 -0.5700409   0     1 -5.961760 0.8559517 1.0000000 0.9466871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   352 -0.5700409   1     1 -6.034307 0.9324549 0.9466871 1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   350 -0.4360821   0     0 -4.056399 1.0000000 0.8476052 0.9306088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   350 -0.4360821   0     1 -3.924495 0.8476052 1.0000000 0.9196642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   350 -0.4360821   1     1 -4.775729 0.9306088 0.9196642 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             cut duration sim</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Max(min follow-up, event cut) 75.17363   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Max(min follow-up, event cut) 75.17363   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Max(min follow-up, event cut) 75.17363   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Max(min follow-up, event cut) 76.00686   2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Max(min follow-up, event cut) 76.00686   2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Max(min follow-up, event cut) 76.00686   2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Max(min follow-up, event cut) 77.05632   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Max(min follow-up, event cut) 77.05632   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Max(min follow-up, event cut) 77.05632   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Max(min follow-up, event cut) 76.08624   2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Max(min follow-up, event cut) 76.08624   2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Max(min follow-up, event cut) 76.08624   2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># MaxCombo power estimate for cutoff at max of targeted events, minimum follow-up</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">xx</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
@@ -163,7 +163,7 @@ in <code><a href="https://rdrr.io/pkg/mvtnorm/man/pmvnorm.html" class="external-
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_map.html" class="external-link">group_map</a></span><span class="op">(</span><span class="va">pvalue_maxcombo</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">p</span> <span class="op">&lt;</span> <span class="fl">.025</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
