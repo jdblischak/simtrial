@@ -104,7 +104,7 @@ counting_process <- function(x, arm) {
 
   # Handling ties using Breslow's method
   ans[, mtte := -tte]
-  ans <- ans[, list(
+  ans <- ans[, .(
     events = sum(event),
     n_event_tol = sum((treatment == arm) * event),
     tte = tte[1],

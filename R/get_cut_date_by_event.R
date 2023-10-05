@@ -64,7 +64,7 @@
 get_cut_date_by_event <- function(x, event) {
   y <- as.data.table(x)
   y <- y[fail == 1, ]
-  y <- y[, list(cte)]
+  y <- y[, .(cte)]
   y <- y[order(cte), ]
   y[, eventCount := frankv(y, "cte", ties.method = "first")]
   y <- y[eventCount <= event, ]
