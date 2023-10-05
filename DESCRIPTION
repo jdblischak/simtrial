@@ -47,7 +47,8 @@ Imports:
     stats,
     survival,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Suggests:
     Matrix,
     bshazard,
