@@ -58,3 +58,9 @@ utils::globalVariables(
     "var_o_minus_e"
   )
 )
+
+# Workaround to remove `R CMD check` NOTE "All declared Imports should be used."
+# https://r-pkgs.org/dependencies-in-practice.html#how-to-not-use-a-package-in-imports
+ignore_unused_imports <- function() {
+  utils::globalVariables
+}
