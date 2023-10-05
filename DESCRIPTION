@@ -57,6 +57,7 @@ Suggests:
     gsDesign,
     knitr,
     markdown,
+    remotes,
     rmarkdown,
     stringr,
     survMisc,

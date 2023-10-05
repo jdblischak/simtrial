@@ -1,13 +1,22 @@
 # see data-raw/generate-backwards-compatible-test-data.R for how test data was
 # generated with a previous version of simtrial
 
+reference <- Sys.getenv("SIMTRIAL_TEST_BACKWARDS_COMPATIBILITY_REF")
+if (nchar(reference) > 0) {
+  source("generate-backwards-compatible-test-data.R")
+  generate_test_data(reference = reference, outdir = "fixtures/backwards-compatibility")
+  library("simtrial")
+} else {
+  skip(message = "Not testing backwards compatibility")
+}
+
 test_that("cut_data_by_date()", {
   set.seed(12345)
   observed <- cut_data_by_date(
     x = sim_pw_surv(n = 20),
     cut_date = 5
   )
-  expected <- readRDS("fixtures/cut_data_by_date_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/cut_data_by_date_ex1.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
@@ -35,7 +44,7 @@ test_that("get_cut_date_by_event()", {
     )
   )
   observed <- get_cut_date_by_event(subset(x, stratum == "Positive"), event = 50)
-  expected <- readRDS("fixtures/get_cut_date_by_event_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/get_cut_date_by_event_ex1.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
@@ -48,7 +57,7 @@ test_that("counting_process()", {
     event = rep(c(0, 1), 8)
   )
   observed <- counting_process(x, arm = 1)
-  expected <- readRDS("fixtures/counting_process_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/counting_process_ex1.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 2
@@ -56,7 +65,7 @@ test_that("counting_process()", {
   x <- sim_pw_surv(n = 400)
   y <- cut_data_by_event(x, 150)
   observed <- counting_process(y, arm = "experimental")
-  expected <- readRDS("fixtures/counting_process_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/counting_process_ex2.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 3
@@ -69,7 +78,7 @@ test_that("counting_process()", {
   )
   arm <- 1
   observed <- counting_process(x, arm)
-  expected <- readRDS("fixtures/counting_process_ex3.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/counting_process_ex3.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
@@ -83,13 +92,13 @@ test_that("wlr()", {
 
   # Compute the corvariance between FH(0, 0), FH(0, 1) and FH(1, 0)
   observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)))
-  expected <- readRDS("fixtures/wlr_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/wlr_ex1.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
   observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_variance = TRUE)
-  expected <- readRDS("fixtures/wlr_ex1_var.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/wlr_ex1_var.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
   observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0, 1), gamma = c(0, 1, 0)), return_corr = TRUE)
-  expected <- readRDS("fixtures/wlr_ex1_cor.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/wlr_ex1_cor.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 2
@@ -99,7 +108,7 @@ test_that("wlr()", {
   x <- cut_data_by_event(x, 100)
   x <- counting_process(x, arm = "experimental")
   observed <- wlr(x, rho_gamma = data.frame(rho = c(0, 0), gamma = c(0, 1)), return_corr = TRUE)
-  expected <- readRDS("fixtures/wlr_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/wlr_ex2.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
@@ -112,7 +121,7 @@ test_that("rpw_enroll()", {
       duration = c(100, 200, 100)
     )
   )
-  expected <- readRDS("fixtures/rpw_enroll_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/rpw_enroll_ex1.rds")
   expect_equal(observed, expected)
 
   # Example 2
@@ -122,7 +131,7 @@ test_that("rpw_enroll()", {
     n = 1e5,
     enroll_rate = data.frame(rate = .03, duration = 1)
   )
-  expected <- readRDS("fixtures/rpw_enroll_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/rpw_enroll_ex2.rds")
   expect_equal(observed, expected)
 })
 
@@ -130,7 +139,7 @@ test_that("simfix2simpwsurv()", {
   # Example 1
   # Convert standard input
   observed <- simfix2simpwsurv()
-  expected <- readRDS("fixtures/simfix2simpwsurv_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/simfix2simpwsurv_ex1.rds")
   expect_equivalent(
     as.data.frame(observed$fail_rate),
     as.data.frame(expected$fail_rate)
@@ -156,7 +165,7 @@ test_that("simfix2simpwsurv()", {
     dropout_rate = .01
   )
   observed <- simfix2simpwsurv(fail_rate)
-  expected <- readRDS("fixtures/simfix2simpwsurv_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/simfix2simpwsurv_ex2.rds")
   expect_equivalent(
     as.data.frame(observed$fail_rate),
     as.data.frame(expected$fail_rate)
@@ -171,7 +180,7 @@ test_that("sim_pw_surv()", {
   # Example 1
   set.seed(12345)
   observed <- sim_pw_surv(n = 20)
-  expected <- readRDS("fixtures/sim_pw_surv_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_pw_surv_ex1.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 2
@@ -181,7 +190,7 @@ test_that("sim_pw_surv()", {
     n = 20,
     block = c(rep("experimental", 3), "control")
   )
-  expected <- readRDS("fixtures/sim_pw_surv_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_pw_surv_ex2.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 3
@@ -209,7 +218,7 @@ test_that("sim_pw_surv()", {
       rate = rep(.001, 4)
     )
   )
-  expected <- readRDS("fixtures/sim_pw_surv_ex3.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_pw_surv_ex3.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 
   # Example 4
@@ -237,7 +246,7 @@ test_that("sim_pw_surv()", {
     fail_rate = fail_rate,
     dropout_rate = dropout_rate
   )
-  expected <- readRDS("fixtures/sim_pw_surv_ex4.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_pw_surv_ex4.rds")
   expect_equivalent(as.data.frame(observed), as.data.frame(expected))
 })
 
@@ -246,14 +255,14 @@ test_that("sim_fixed_n()", {
   # Show output structure
   set.seed(12345)
   observed <- sim_fixed_n(n = 2)
-  expected <- readRDS("fixtures/sim_fixed_n_ex1.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_fixed_n_ex1.rds")
   expect_equal(observed, expected)
 
   # Example 2
   # Example with 2 tests: logrank and FH(0,1)
   set.seed(12345)
   observed <- sim_fixed_n(n = 2, rho_gamma = tibble(rho = 0, gamma = c(0, 1)))
-  expected <- readRDS("fixtures/sim_fixed_n_ex2.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_fixed_n_ex2.rds")
   expect_equal(observed, expected)
 
   # Example 3
@@ -265,6 +274,6 @@ test_that("sim_fixed_n()", {
     timing_type = c(2, 5),
     rho_gamma = data.frame(rho = 0, gamma = c(0, 1))
   )
-  expected <- readRDS("fixtures/sim_fixed_n_ex3.rds")
+  expected <- readRDS("fixtures/backwards-compatibility/sim_fixed_n_ex3.rds")
   expect_equal(observed, expected)
 })
