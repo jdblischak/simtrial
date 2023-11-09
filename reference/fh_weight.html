@@ -152,12 +152,28 @@ $$z = \sum_i X_i/\sqrt{\sum_i V_i}.$$</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compute logrank FH(0, 1)</span></span></span>
 <span class="r-in"><span><span class="fu">fh_weight</span><span class="op">(</span><span class="va">x</span>, rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fl">0</span>, gamma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma         z</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     1 -2.800222</span>
 <span class="r-in"><span><span class="fu">fh_weight</span><span class="op">(</span><span class="va">x</span>, rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fl">0</span>, gamma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, return_variance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma         z      var</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     1 -2.800222 2.619743</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compute the corvariance between FH(0, 0), FH(0, 1) and FH(1, 0)</span></span></span>
 <span class="r-in"><span><span class="fu">fh_weight</span><span class="op">(</span><span class="va">x</span>, rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     0 -1.6571647</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0     1 -2.8002220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1     0 -0.9936431</span>
 <span class="r-in"><span><span class="fu">fh_weight</span><span class="op">(</span><span class="va">x</span>, rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>, return_variance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z        v1       v2        v3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     0 -1.6571647 24.512954 6.736598 17.776356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0     1 -2.8002220  6.736598 2.619743  4.116855</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1     0 -0.9936431 17.776356 4.116855 13.659501</span>
 <span class="r-in"><span><span class="fu">fh_weight</span><span class="op">(</span><span class="va">x</span>, rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>, return_corr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z        v1        v2        v3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     0 -1.6571647 1.0000000 0.8406466 0.9714658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0     1 -2.8002220 0.8406466 1.0000000 0.6882066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1     0 -0.9936431 0.9714658 0.6882066 1.0000000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example 2</span></span></span>
 <span class="r-in"><span><span class="co"># Use default enrollment and event rates at cut of 100 events</span></span></span>
@@ -188,6 +204,9 @@ $$z = \sum_i X_i/\sqrt{\sum_i V_i}.$$</p></li>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  return_variance <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z        v1       v2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0     0 -0.2790263 24.554559 6.644167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0     1 -1.1511132  6.644167 2.552420</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Off-diagonal element should be variance in following</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">fh_weight</span><span class="op">(</span></span></span>
@@ -197,9 +216,13 @@ $$z = \sum_i X_i/\sqrt{\sum_i V_i}.$$</p></li>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  return_variance <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z      var</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0   0.5 -0.9492403 6.644167</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare off diagonal result with fh_weight()</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">fh_weight</span><span class="op">(</span>rho_gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="fl">0</span>, gamma <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho gamma          z</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0   0.5 -0.9492403</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
