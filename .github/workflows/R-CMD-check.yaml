@@ -35,8 +35,23 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::devtools
           needs: check
+
+      - name: Install package
+        shell: Rscript {0}
+        run: devtools::install()
+
+      - name: Run sim_fixed_n() sequentially
+        shell: Rscript {0}
+        run: x <- simtrial::sim_fixed_n()
+
+      - name: Run sim_fixed_n() in parallel
+        shell: Rscript {0}
+        run: |
+          library("future")
+          plan(multisession, workers = 2)
+          x <- simtrial::sim_fixed_n()
 
       - uses: r-lib/actions/check-r-package@v2
         with:
