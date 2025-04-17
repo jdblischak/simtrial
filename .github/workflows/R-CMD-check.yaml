@@ -42,7 +42,7 @@ jobs:
           FUTURE_VERSION: ${{ matrix.future_version }}
         shell: Rscript {0}
         run: |
-          future_version <- Sys.glob("FUTURE_VERSION")
+          future_version <- Sys.getenv("FUTURE_VERSION")
           remotes::install_version("future", future_version)
 
       - uses: r-lib/actions/check-r-package@v2
