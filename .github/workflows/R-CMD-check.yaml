@@ -15,7 +15,8 @@ jobs:
 
     strategy:
       fail-fast: false
-      FUTURE_VERSION: ['1.34.0', '1.40.0']
+      matrix:
+        future_version: ['1.34.0', '1.40.0']
 
     env:
       R_KEEP_PKG_SOURCE: yes
@@ -37,8 +38,12 @@ jobs:
           needs: check
 
       - name: Install future
+        env:
+          FUTURE_VERSION: ${{ matrix.future_version }}
         shell: Rscript {0}
-        run: remotes::install("future", "{{ FUTURE_VERSION }}")
+        run: |
+          future_version <- Sys.glob("FUTURE_VERSION")
+          remotes::install("future", future_version)
 
       - uses: r-lib/actions/check-r-package@v2
         with:
