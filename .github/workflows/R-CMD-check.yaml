@@ -11,7 +11,7 @@ jobs:
   R-CMD-check:
     runs-on: windows-latest
 
-    name: future 1.40.0
+    name: future reprex
 
     strategy:
       fail-fast: false
@@ -34,7 +34,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::devtools, any::remotes
+          extra-packages: any::rcmdcheck, any::remotes
           needs: check
 
       - name: Install future
@@ -43,7 +43,7 @@ jobs:
         shell: Rscript {0}
         run: |
           future_version <- Sys.glob("FUTURE_VERSION")
-          remotes::install("future", future_version)
+          remotes::install_version("future", future_version)
 
       - uses: r-lib/actions/check-r-package@v2
         with:
