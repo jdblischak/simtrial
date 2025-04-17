@@ -255,6 +255,8 @@ sim_fixed_n <- function(
     .errorhandling = "stop",
     .options.future = list(seed = TRUE)
   ) %dofuture% {
+    simpleInternal()
+    simpleExport()
     # Generate piecewise data ----
     sim <- sim_pw_surv(
       n = sample_size,
