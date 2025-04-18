@@ -43,7 +43,7 @@ Setting your seed prior to calling the function will ensure that the results are
 Suppose you want to investigate the duration of a trial under two possible enrollments strategies.
 Both enrollments are piecewise, but have varying durations and rates.
 
-```{r dependencies, message=FALSE, warning=FALSE}
+```{r dependencies}
 library(simtrial)
 library(future)
 library(doFuture)
@@ -61,23 +61,6 @@ enroll_rate1 <- data.frame(rate = c(5, 20, 10), duration = c(100, 150, 150))
 enroll_rate2 <- data.frame(rate = c(10, 15, 30), duration = c(150, 175, 75))
 x1 <- rpwexp_enroll(n = n, enroll_rate = enroll_rate1)
 x2 <- rpwexp_enroll(n = n, enroll_rate = enroll_rate2)
-
-plot(
-  x1, 1:n,
-  type = "l",
-  col = palette()[4],
-  xlim = c(0, max(x1, x2)),
-  main = "Piecewise enrollments",
-  xlab = "Time",
-  ylab = "Enrollment"
-)
-lines(x2, 1:n, col = palette()[7])
-legend(
-  250, 1500,
-  legend = c("Enrollment 1", "Enrollment 2"),
-  col = c(palette()[4], palette()[7]),
-  lty = c(1, 1)
-)
 ```
 
 We see that *Enrollment 2* enrolls individuals more quickly than *Enrollment 1* at onset.
@@ -138,29 +121,6 @@ As you may have anticipated, we see that for a lower number of events, enrollmen
 `r sprintf("%.1f", mean(seq_result2$duration))`
 over that of enrollment 1, which is
 `r sprintf("%.1f", mean(seq_result1$duration))`.
-
-```{r sequential-display-duration, echo=FALSE, fig.height=4, fig.width=6, fig.align="center"}
-duration_min <- min(seq_result1$duration, seq_result2$duration)
-duration_max <- max(seq_result1$duration, seq_result2$duration)
-hist(
-  x = seq_result1$duration,
-  col = palette()[4],
-  main = "Duration by enrollment strategy",
-  xlab = "Duration",
-  xlim = c(duration_min, duration_max),
-  ylab = "Number of simulations",
-  ylim = c(0, n_sim / 3)
-)
-hist(seq_result2$duration, col = palette()[7], add = TRUE)
-abline(v = mean(seq_result1$duration), lwd = 2, lty = "dashed")
-abline(v = mean(seq_result2$duration), lwd = 2, lty = "dashed")
-legend(
-  "top",
-  legend = c("Enrollment 1", "Enrollment 2"),
-  col = c(palette()[4], palette()[7]),
-  lty = c(1, 1)
-)
-```
 
 ## Setting up a parallel backend
 
@@ -238,69 +198,3 @@ all.equal(seq_result2, par_result2)
 If there is substantial overhead associated with executing in parallel, sequential evaluation may be faster.
 For a low number of simulations or available cores, it may be preferable to continue computation in serial rather than parallel.
 We leave it to the end user to determine this difference based on the resources available to them.
-
-## A nested parallel example
-
-We provide an additional example using a nested parallel structure for users with more extensive resources, such as high-performance computing clusters, available to them.
-Because these resources are not commonly available, we will not execute the below code herein.
-Consider that you have two accessible nodes, each with three cores (shown in the diagram below).
-
-```{r schema, echo=FALSE, fig.cap="Available resource schematic.", fig.align="center", out.width="90%"}
-knitr::include_graphics("./figures/schema.png")
-```
-
-Ideally, all available resources will be used when executing the simulations.
-To do this, we need to correctly define our backend using `plan()` and run the same code as previously.
-The different structures, or topologies, for a backend can be changed with a more in depth explanation given in the [future topologies vignette](https://future.futureverse.org/articles/future-3-topologies.html).
-Our below example follows closely their example.
-
-In our below snippet, we consider the two nodes named `n1` and `n2` and create a function to select the number of cores to use on those named nodes.
-While trivial here, a courteous user of shared machines would specify fewer than all available cores and can do such using a modification of the below code.
-We then implement our backend using a list that follows the hierarchy of the available resources.
-
-```{r nested-topology, eval=FALSE}
-nodes <- c("n1", "n2")
-custom_cores <- function() {
-  switch(Sys.info()[["nodename"]],
-    "n1" = 3L, # Modify here for number of cores on node1
-    "n2" = 3L, # Modify here for number of cores on node2
-    ## Default:
-    availableCores()
-  )
-}
-plan(list(
-  tweak(cluster, workers = nodes),
-  tweak(multisession, workers = custom_cores)
-))
-```
-
-The function `tweak()` is necessary to override the inherent protection of nested parallelism, meant to help avoid overloading one's resources by errantly starting too many processes.
-Because of the need to tweak backends, the message echoed to the console for nested backends reflects the highest level of the nested hierarchy.
-
-With the backend in place, we then can run the identical code from before using all available resources and return the same results as before.
-
-```{r confirm-cluster, eval=FALSE}
-set.seed(1)
-
-enroll_rates <- list(enroll_rate1, enroll_rate2)
-
-nested_result <- foreach::foreach(
-  i = 1:2,
-  .combine = "list",
-  .options.future = list(seed = TRUE)
-) %dofuture% {
-  sim_fixed_n(
-    n_sim = n_sim,
-    sample_size = 3000,
-    target_event = 700,
-    enroll_rate = enroll_rates[[i]],
-    timing_type = 2 # Time until targeted event count achieved
-  )
-}
-```
-
-Then, we reset the `plan` to sequential to avoid accidentally continuing to execute later calls within these resources.
-
-```{r plan-sequential2, eval=FALSE}
-plan(sequential)
-```
