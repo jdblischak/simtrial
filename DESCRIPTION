@@ -46,9 +46,7 @@ Imports:
     survival,
     utils
 Suggests:
-    dplyr,
     gsDesign,
-    gsDesign2 (>= 1.1.3),
     gt,
     knitr,
     rmarkdown
