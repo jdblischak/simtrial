@@ -54,22 +54,3 @@ function \code{Surv()} is never actually executed. Similarly, any other function
 applied in the formula are also ignored, thus you shouldn't apply any
 transformation functions such as \code{log()} since these will have no effect.
 }
-\examples{
-data(ex1_delayed_effect)
-rmst(
-  data = ex1_delayed_effect,
-  var_label_tte = "month",
-  var_label_event = "evntd",
-  var_label_group = "trt",
-  tau = 10,
-  reference = "0"
-)
-
-# Formula interface
-rmst(
-  data = ex1_delayed_effect,
-  formula = Surv(month, evntd) ~ trt,
-  tau = 10,
-  reference = "0"
-)
-}

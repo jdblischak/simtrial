@@ -47,25 +47,6 @@
 #' @return The z statistics.
 #'
 #' @export
-#'
-#' @examples
-#' data(ex1_delayed_effect)
-#' rmst(
-#'   data = ex1_delayed_effect,
-#'   var_label_tte = "month",
-#'   var_label_event = "evntd",
-#'   var_label_group = "trt",
-#'   tau = 10,
-#'   reference = "0"
-#' )
-#'
-#' # Formula interface
-#' rmst(
-#'   data = ex1_delayed_effect,
-#'   formula = Surv(month, evntd) ~ trt,
-#'   tau = 10,
-#'   reference = "0"
-#' )
 rmst <- function(
     data,
     tau = 10,
@@ -128,20 +109,6 @@ rmst <- function(
 #' @importFrom data.table setDF rbindlist
 #' @importFrom survival Surv
 #' @keywords internal
-#'
-#' @examples
-#' data(ex1_delayed_effect)
-#' with(
-#'   ex1_delayed_effect,
-#'   simtrial:::rmst_two_arm(
-#'     time_var = month,
-#'     event_var = evntd,
-#'     group_var = trt,
-#'     trunc_time = 6,
-#'     reference = "0",
-#'     alpha = 0.05
-#'   )
-#' )
 rmst_two_arm <- function(
     time_var,
     event_var,
@@ -250,17 +217,6 @@ diff_rmst <- function(x, op_single, reference, trunc_time, alpha = alpha) {
 #' @importFrom survival survfit Surv
 #'
 #' @keywords internal
-#'
-#' @examples
-#' data(ex1_delayed_effect)
-#' data_single_arm <- ex1_delayed_effect[ex1_delayed_effect$trt == 1, ]
-#' simtrial:::rmst_single_arm(
-#'   time_var = data_single_arm$month,
-#'   event_var = data_single_arm$evntd,
-#'   tau = 10,
-#'   group_label = "Treatment 1",
-#'   alpha = 0.05
-#' )
 rmst_single_arm <- function(
     time_var,
     event_var,

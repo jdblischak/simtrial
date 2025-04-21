@@ -111,29 +111,6 @@
 #' x |> wlr(weight = fh(rho = 0, gamma = 1))
 #' x |> wlr(weight = mb(delay = 4, w_max = 2))
 #' x |> wlr(weight = early_zero(early_period = 4))
-#'
-#' # ---------------------- #
-#' #      Example 2         #
-#' #  Use cumsum dataset    #
-#' # ---------------------- #
-#' x <- data.frame(treatment = ifelse(ex1_delayed_effect$trt == 1, "experimental", "control"),
-#'                 stratum = rep("All", nrow(ex1_delayed_effect)),
-#'                 tte = ex1_delayed_effect$month,
-#'                 event = ex1_delayed_effect$evntd)
-#'
-#' # Users can specify the randomization ratio to calculate the statistical information under H0
-#' x |> wlr(weight = fh(rho = 0, gamma = 0.5), ratio = 2)
-#'
-#' x |>
-#'   counting_process(arm = "experimental") |>
-#'   wlr(weight = fh(rho = 0, gamma = 0.5), ratio = 2)
-#'
-#' # If users don't provide the randomization ratio, we will calculate the emperical ratio
-#' x |> wlr(weight = fh(rho = 0, gamma = 0.5))
-#'
-#' x |>
-#'   counting_process(arm = "experimental") |>
-#'   wlr(weight = fh(rho = 0, gamma = 0.5))
 wlr <- function(data, weight, return_variance = FALSE, ratio = NULL) {
   UseMethod("wlr", data)
 }

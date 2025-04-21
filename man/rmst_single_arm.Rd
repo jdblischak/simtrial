@@ -38,15 +38,4 @@ A data frame of
 \description{
 Calculate RMST for a single cut-off time point
 }
-\examples{
-data(ex1_delayed_effect)
-data_single_arm <- ex1_delayed_effect[ex1_delayed_effect$trt == 1, ]
-simtrial:::rmst_single_arm(
-  time_var = data_single_arm$month,
-  event_var = data_single_arm$evntd,
-  tau = 10,
-  group_label = "Treatment 1",
-  alpha = 0.05
-)
-}
 \keyword{internal}
