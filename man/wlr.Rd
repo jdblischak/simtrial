@@ -94,30 +94,3 @@ The stratified Fleming-Harrington weighted logrank test is then computed as:
 \deqn{z = \sum_i X_i/\sqrt{\sum_i V_i}.}
 }
 }
-\examples{
-# ---------------------- #
-#      Example 1         #
-#  Use dataset generated #
-#     by simtrial        #
-# ---------------------- #
-x <- sim_pw_surv(n = 200) |> cut_data_by_event(100)
-
-# Example 1A: WLR test with FH wights
-x |> wlr(weight = fh(rho = 0, gamma = 0.5))
-x |> wlr(weight = fh(rho = 0, gamma = 0.5), return_variance = TRUE)
-
-# Example 1B: WLR test with MB wights
-x |> wlr(weight = mb(delay = 4, w_max = 2))
-
-# Example 1C: WLR test with early zero wights
-x |> wlr(weight = early_zero(early_period = 4))
-
-# Example 1D
-# For increased computational speed when running many WLR tests, you can
-# pre-compute the counting_process() step first, and then pass the result of
-# counting_process() directly to wlr()
-x <- x |> counting_process(arm = "experimental")
-x |> wlr(weight = fh(rho = 0, gamma = 1))
-x |> wlr(weight = mb(delay = 4, w_max = 2))
-x |> wlr(weight = early_zero(early_period = 4))
-}

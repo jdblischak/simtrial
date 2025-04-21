@@ -43,11 +43,6 @@ survival estimate at time \eqn{t} for the combined data
 The weight at time \eqn{t} is then defined as
 \deqn{w(t)=\min(w_{\max}, S(\min(t, t^*))^{-1}).}
 }
-\examples{
-sim_pw_surv(n = 200) |>
-  cut_data_by_event(100) |>
-  wlr(weight = mb(delay = 8, w_max = Inf))
-}
 \references{
 Magirr, Dominic, and Carl‐Fredrik Burman. 2019.
 "Modestly weighted logrank tests."

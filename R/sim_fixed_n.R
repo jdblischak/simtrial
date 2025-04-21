@@ -73,45 +73,6 @@
 #' @importFrom survival strata Surv
 #'
 #' @export
-#'
-#' @examplesIf requireNamespace("dplyr", quietly = TRUE)
-#' library(dplyr)
-#' library(future)
-#'
-#' # Example 1: logrank test ----
-#' x <- sim_fixed_n(n_sim = 10, timing_type = 1, rho_gamma = data.frame(rho = 0, gamma = 0))
-#' # Get power approximation
-#' mean(x$z <= qnorm(.025))
-#'
-#' # Example 2: WLR with FH(0,1) ----
-#' sim_fixed_n(n_sim = 1, timing_type = 1, rho_gamma = data.frame(rho = 0, gamma = 1))
-#' # Get power approximation
-#' mean(x$z <= qnorm(.025))
-#'
-#' \donttest{
-#' # Example 3: MaxCombo, i.e., WLR-FH(0,0)+ WLR-FH(0,1)
-#' # Power by test
-#' # Only use cuts for events, events + min follow-up
-#' x <- sim_fixed_n(
-#'   n_sim = 10,
-#'   timing_type = 2,
-#'   rho_gamma = data.frame(rho = 0, gamma = c(0, 1))
-#' )
-#'
-#' # Get power approximation
-#' x |>
-#'   group_by(sim) |>
-#'   filter(row_number() == 1) |>
-#'   ungroup() |>
-#'   summarize(power = mean(p_value < .025))
-#'
-#' # Example 4
-#' # Use two cores
-#' set.seed(2023)
-#' plan("multisession", workers = 2)
-#' sim_fixed_n(n_sim = 10)
-#' plan("sequential")
-#' }
 sim_fixed_n <- function(
     n_sim = 1000,
     sample_size = 500, # Sample size

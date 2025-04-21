@@ -42,7 +42,6 @@ Imports:
     foreach,
     future,
     methods,
-    mvtnorm,
     stats,
     survival,
     utils
