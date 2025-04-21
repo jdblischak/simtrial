@@ -139,12 +139,6 @@ wlr.counting_process <- function(data, weight, return_variance = FALSE, ratio = 
   if (inherits(weight, "fh")) {
     x <- x |> fh_weight(rho = weight$rho, gamma = weight$gamma)
     ans$parameter <- paste0("FH(rho=", weight$rho, ", gamma=", weight$gamma, ")")
-  } else if (inherits(weight, "mb")) {
-    x <- x |> mb_weight(delay = weight$delay, w_max = weight$w_max)
-    ans$parameter <- paste0("MB(delay = ", weight$delay, ", max_weight = ", weight$w_max, ")")
-  } else if (inherits(weight, "early_period")) {
-    x <- x |> early_zero_weight(early_period = weight$early_period, fail_rate = weight$fail_rate)
-    ans$parameter <- paste0("Xu 2017 with first ", round(weight$early_period, 4), " months of 0 weights")
   }
 
   # calculate the treatment estimation

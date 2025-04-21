@@ -350,19 +350,6 @@ doAnalysis <- function(d, rho_gamma, n_stratum) {
       se = res$se,
       z = res$z
     )
-  } else {
-    res <- d |>
-      maxcombo(rho = rho_gamma$rho, gamma = rho_gamma$gamma, return_corr = TRUE)
-
-    ans <- data.frame(
-      method = rep(res$method, nrow(rho_gamma)),
-      parameter = rep(res$parameter, nrow(rho_gamma)),
-      estimate = rep("-", nrow(rho_gamma)),
-      se = rep("-", nrow(rho_gamma)),
-      z = res$z,
-      p_value = rep(res$p_value, nrow(rho_gamma))
-    )
-    ans <- cbind(ans, res$corr |> as.data.frame())
   }
 
   event <- sum(d$event)
