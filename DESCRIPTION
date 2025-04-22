@@ -45,8 +45,6 @@ Imports:
     survival,
     utils
 Suggests:
-    gsDesign,
-    gt,
     knitr,
     rmarkdown
 Roxygen: list(markdown = TRUE)

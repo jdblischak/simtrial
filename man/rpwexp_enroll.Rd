@@ -27,8 +27,7 @@ distribution can be easily approximated.
 \code{rpwexp_enroll()} is to support simulation of both the Lachin and Foulkes (1986)
 sample size method for (fixed trial duration) as well as the
 Kim and Tsiatis(1990) method (fixed enrollment rates and either
-fixed enrollment duration or fixed minimum follow-up);
-see \code{\link[gsDesign:nSurv]{gsDesign::nSurv()}}.
+fixed enrollment duration or fixed minimum follow-up).
 }
 \examples{
 # Example 1

@@ -27,8 +27,7 @@ or a treatment effect that that is otherwise changing
 \code{rpwexp()} is to support simulation of both the Lachin and Foulkes (1986)
 sample size method for (fixed trial duration) as well as the
 Kim and Tsiatis (1990) method (fixed enrollment rates and either
-fixed enrollment duration or fixed minimum follow-up);
-see \code{\link[gsDesign:nSurv]{gsDesign::nSurv()}}.
+fixed enrollment duration or fixed minimum follow-up).
 }
 \details{
 Using the \code{cumulative = TRUE} option, enrollment times that piecewise
