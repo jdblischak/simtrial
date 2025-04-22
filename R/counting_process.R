@@ -71,23 +71,6 @@
 #' simply obtained from the attribute of the same name from the input object.
 #' Otherwise, the returned ratio is the empirical ratio of treatment to control
 #' events.
-#'
-#' @examples
-#' # Example 1
-#' x <- data.frame(
-#'   stratum = c(rep(1, 10), rep(2, 6)),
-#'   treatment = rep(c(1, 1, 0, 0), 4),
-#'   tte = 1:16,
-#'   event = rep(c(0, 1), 8)
-#' )
-#' counting_process(x, arm = 1)
-#'
-#' # Example 2
-#' x <- sim_pw_surv(n = 400)
-#' y <- cut_data_by_event(x, 150) |> counting_process(arm = "experimental")
-#' # Weighted logrank test (Z-value and 1-sided p-value)
-#' z <- sum(y$o_minus_e) / sqrt(sum(y$var_o_minus_e))
-#' c(z, pnorm(z))
 counting_process <- function(x, arm) {
   unique_treatment <- unique(x$treatment)
 

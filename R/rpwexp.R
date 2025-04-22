@@ -72,5 +72,5 @@
 rpwexp <- function(
     n = 100,
     fail_rate = data.frame(duration = c(1, 1), rate = c(10, 20))) {
-  rpwexp_inverse_cdf_cpp(n = n, fail_rate = fail_rate)
+  rpwexp_naive(n = n, fail_rate = fail_rate)
 }

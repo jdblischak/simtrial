@@ -33,9 +33,7 @@
 #' @importFrom data.table data.table merge.data.table setDF
 #' @noRd
 fh_weight <- function(
-    x = sim_pw_surv(n = 200) |>
-      cut_data_by_event(150) |>
-      counting_process(arm = "experimental"),
+    x,
     rho = 0,
     gamma = 1) {
   # Input checking ----

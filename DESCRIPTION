@@ -36,7 +36,6 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
 Imports:
-    Rcpp,
     data.table (>= 1.12.4),
     doFuture,
     foreach,
@@ -50,7 +49,5 @@ Suggests:
     gt,
     knitr,
     rmarkdown
-LinkingTo:
-    Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

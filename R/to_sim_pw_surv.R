@@ -39,43 +39,6 @@
 #' @importFrom data.table ":=" .N as.data.table setDF
 #'
 #' @export
-#'
-#' @examples
-#' # Example 1
-#' # Convert standard input
-#' to_sim_pw_surv()
-#'
-#' # Stratified example
-#' fail_rate <- data.frame(
-#'   stratum = c(rep("Low", 3), rep("High", 3)),
-#'   duration = rep(c(4, 10, 100), 2),
-#'   fail_rate = c(
-#'     .04, .1, .06,
-#'     .08, .16, .12
-#'   ),
-#'   hr = c(
-#'     1.5, .5, 2 / 3,
-#'     2, 10 / 16, 10 / 12
-#'   ),
-#'   dropout_rate = .01
-#' )
-#'
-#' x <- to_sim_pw_surv(fail_rate)
-#'
-#' # Do a single simulation with the above rates
-#' # Enroll 300 patients in ~12 months at constant rate
-#' sim <- sim_pw_surv(
-#'   n = 300,
-#'   stratum = data.frame(stratum = c("Low", "High"), p = c(.6, .4)),
-#'   enroll_rate = data.frame(duration = 12, rate = 300 / 12),
-#'   fail_rate = x$fail_rate,
-#'   dropout_rate = x$dropout_rate
-#' )
-#'
-#' # Cut after 200 events and do a stratified logrank test
-#' sim |>
-#'   cut_data_by_event(200) |> # Cut data
-#'   wlr(weight = fh(rho = 0, gamma = 0)) # Stratified logrank
 to_sim_pw_surv <- function(
     # Failure rates as in sim_fixed_n()
     fail_rate = data.frame(
