@@ -46,7 +46,7 @@ jobs:
           remotes::install_version("future", "1.49.0")
           remotes::install_version("future.apply", "1.11.3")
           remotes::install_version("parallelly", "1.44.0")
-          sessioninfo::session_info()
+          sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
 
       - uses: r-lib/actions/check-r-package@v2
         with:
