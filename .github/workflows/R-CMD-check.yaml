@@ -42,8 +42,8 @@ jobs:
         shell: Rscript {0}
         run: |
           install.packages("remotes")
-          remotes::install_version("doFuture", "1.1.0", upgrade = FALSE)
-          remotes::install_version("future", "1.49.0", upgrade = FALSE)
+          # remotes::install_version("doFuture", "1.1.0", upgrade = FALSE)
+          # remotes::install_version("future", "1.49.0", upgrade = FALSE)
           remotes::install_version("future.apply", "1.11.3", upgrade = FALSE)
           remotes::install_version("parallelly", "1.44.0", upgrade = FALSE)
           sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
