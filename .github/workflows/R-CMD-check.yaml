@@ -38,11 +38,14 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Install legacy future
+      - name: Install legacy {future} stack
         shell: Rscript {0}
         run: |
           install.packages("remotes")
-          remotes::install_version("future", "1.34.0")
+          remotes::install_version("doFuture", "1.1.0")
+          remotes::install_version("future", "1.49.0")
+          remotes::install_version("future.apply", "1.11.3")
+          remotes::install_version("parallelly", "1.44.0")
 
       - uses: r-lib/actions/check-r-package@v2
         with:
